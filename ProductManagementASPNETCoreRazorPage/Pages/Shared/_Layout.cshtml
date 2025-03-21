@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+
+@{
+    var fullName = User.Identity.IsAuthenticated
+        ? User.FindFirst(ClaimTypes.Name)?.Value
+        : null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,6 +32,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Products/Index">Product</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (!string.IsNullOrEmpty(fullName))
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link">Welcome, <strong>@fullName</strong>!</span>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-page="/Account/Login" asp-page-handler="Logout">
+                                    <button type="submit" class="btn btn-link nav-link text-dark">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -49,3 +81,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@section Scripts {
+    <script src="~/js/microsoft/signalr/signalr.min.js"></script>
+    <script src="~/js/site.js"></script>
+}

@@ -1,0 +1,81 @@
+﻿@page
+@model PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products.IndexModel
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<form method="get">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@Model.Search" placeholder="Search by product name" class="form-control" />
+        </div>
+        <div class="col-md-2">
+            <select name="sortOrder" class="form-control">
+                <option value="" selected="@(Model.SortOrder == null)">Sort by</option>
+                <option value="name_asc" selected="@(Model.SortOrder == "name_asc")">Name Ascending</option>
+                <option value="name_desc" selected="@(Model.SortOrder == "name_desc")">Name Descending</option>
+                <option value="price_asc" selected="@(Model.SortOrder == "price_asc")">Price Low to High</option>
+                <option value="price_desc" selected="@(Model.SortOrder == "price_desc")">Price High to Low</option>
+            </select>
+
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+
+<p>
+    <a asp-page="Create" class="btn btn-success">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Product[0].ProductName)</th>
+            <th>@Html.DisplayNameFor(model => model.Product[0].UnitsInStock)</th>
+            <th>@Html.DisplayNameFor(model => model.Product[0].UnitPrice)</th>
+            <th>@Html.DisplayNameFor(model => model.Product[0].Category.CategoryName)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Product)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.UnitsInStock</td>
+                <td>@item.UnitPrice</td>
+                <td>@item.Category?.CategoryName</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" href="?search=@Model.Search&sortOrder=@Model.SortOrder&page=@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+@section Scripts {
+    <script src="~/js/microsoft/signalr/signalr.min.js"></script>
+    <script src="~/js/site.js"></script>
+}

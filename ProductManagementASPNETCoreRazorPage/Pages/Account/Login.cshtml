@@ -1,0 +1,35 @@
+﻿@page
+@model PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="AccountMember.EmailAddress" class="control-label"></label>
+                    <input asp-for="AccountMember.EmailAddress" class="form-control" />
+                    <span asp-validation-for="AccountMember.EmailAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AccountMember.MemberPassword" class="control-label"></label>
+                    <input asp-for="AccountMember.MemberPassword" class="form-control" type="password" />
+                    <span asp-validation-for="AccountMember.MemberPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+            </form>
+        }
+        else
+        {
+            <form method="post" asp-page-handler="Logout">
+                <input type="submit" value="Logout" class="btn btn-danger" />
+            </form>
+        }
+        </div>
+</div>
