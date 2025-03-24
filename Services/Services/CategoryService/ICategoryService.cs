@@ -10,5 +10,6 @@ namespace PRN222.Lab2.Services.Services.CategoryService
 	public interface ICategoryService
 	{
 		Task<IEnumerable<Category>> GetListCategories();
+		Task<Category> GetCategoryById(int categoryId);
 	}
 }

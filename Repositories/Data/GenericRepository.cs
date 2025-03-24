@@ -85,5 +85,18 @@ namespace PRN222.lab2.Repositories.Data
 				_dbSet.Remove(entity);
 			}
 		}
+
+		public async Task<int> GetCountAsync(Expression<Func<T, bool>>? filter = null)
+		{
+			IQueryable<T> query = _dbSet;
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			return await query.CountAsync();
+		}
+
 	}
 }

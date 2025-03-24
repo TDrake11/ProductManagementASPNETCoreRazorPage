@@ -14,5 +14,6 @@ namespace PRN222.Lab2.Services.Services.ProductService
 		Task UpdateProduct(Product product);
 		Task<IEnumerable<Product>> GetListProducts(string? search, string? sort, int? page, int? pageSize, string? include);
 		Task<Product?> GetProductById(int id);
+		Task<int> GetTotalProducts(string? search);
 	}
 }

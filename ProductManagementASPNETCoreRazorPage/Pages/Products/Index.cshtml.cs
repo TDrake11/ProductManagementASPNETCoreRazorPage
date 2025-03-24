@@ -26,9 +26,9 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
 		public string? SortOrder { get; set; }
 		public int CurrentPage { get; set; } = 1;
 		public int TotalPages { get; set; }
-		public int PageSize { get; set; } = 10;
+		public int PageSize { get; set; } = 3;
 
-		public async Task OnGetAsync(string? search, string? sortOrder, int? page)
+		public async Task OnGetAsync([FromQuery] string? search, [FromQuery] string? sortOrder, [FromQuery] int? page)
 		{
 			Search = search;
 			SortOrder = sortOrder;
@@ -36,8 +36,11 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
 
 			var products = await _productService.GetListProducts(search, sortOrder, CurrentPage, PageSize, "Category");
 
+			// Lấy tổng số sản phẩm để tính số trang
+			int totalItems = await _productService.GetTotalProducts(search);
+
+			// Gán danh sách sản phẩm
 			Product = products.ToList();
-			int totalItems = Product.Count;
 			TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 		}
 	}

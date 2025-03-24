@@ -20,11 +20,13 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
     {
 		private readonly IProductService _productService;
 		private readonly ICategoryService _categoryService;
+		private readonly IHubContext<SignalRServer> _hubContext;
 
-		public EditModel(IProductService productService, ICategoryService categoryService)
+		public EditModel(IProductService productService, ICategoryService categoryService, IHubContext<SignalRServer> hubContext)
 		{
 			_productService = productService;
 			_categoryService = categoryService;
+			_hubContext = hubContext;
 		}
 
 		[BindProperty]
@@ -59,8 +61,10 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
 
             try
             {
-                await _productService.UpdateProduct(Product); ;
-            }
+                await _productService.UpdateProduct(Product);
+                var category = await _categoryService.GetCategoryById((int)Product.CategoryId);
+				await _hubContext.Clients.All.SendAsync("ProductEdited", Product.ProductId, Product.ProductName, Product.UnitsInStock, Product.UnitPrice, category.CategoryName); 
+			}
             catch (DbUpdateConcurrencyException)
             {
                 if (!ProductExists(Product.ProductId))

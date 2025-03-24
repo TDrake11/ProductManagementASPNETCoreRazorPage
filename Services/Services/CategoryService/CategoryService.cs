@@ -20,5 +20,9 @@ namespace PRN222.Lab2.Services.Services.CategoryService
 		{
 			return await _unitOfWork.Repository<Category>().GetListAsync();
 		}
+		public async Task<Category> GetCategoryById(int categoryId)
+		{
+			return await _unitOfWork.Repository<Category>().GetByIdAsync(categoryId);
+		}
 	}
 }

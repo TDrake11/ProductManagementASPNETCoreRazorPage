@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
 using PRN222.lab2.Repositories.Entities;
+using PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Helps;
 using PRN222.Lab2.Services.Services.CategoryService;
 using PRN222.Lab2.Services.Services.ProductService;
 
@@ -18,11 +19,13 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
     {
 		private readonly IProductService _productService;
 		private readonly ICategoryService _categoryService;
+		private readonly IHubContext<SignalRServer> _hubContext;
 
-		public CreateModel(IProductService productService, ICategoryService categoryService)
+		public CreateModel(IProductService productService, ICategoryService categoryService, IHubContext<SignalRServer> hubContext)
 		{
 			_productService = productService;
 			_categoryService = categoryService;
+			_hubContext = hubContext;
 		}
 
 		public async Task<IActionResult> OnGet()
@@ -44,8 +47,10 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
             }
 
             await _productService.CreateProduct(Product);
+            var category = await _categoryService.GetCategoryById((int)Product.CategoryId);
+			await _hubContext.Clients.All.SendAsync("ProductAdded", Product.ProductId, Product.ProductName, Product.UnitsInStock, Product.UnitPrice, category.CategoryName); ;
 
-            return RedirectToPage("./Index");
+			return RedirectToPage("./Index");
         }
     }
 }

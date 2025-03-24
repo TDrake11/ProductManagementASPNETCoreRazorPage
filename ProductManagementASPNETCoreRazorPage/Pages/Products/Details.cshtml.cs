@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PRN222.lab2.Repositories.Entities;
+using PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Helps;
 using PRN222.Lab2.Services.Services.ProductService;
 
 namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
@@ -15,11 +17,13 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
     public class DetailsModel : PageModel
     {
         private readonly IProductService _productService;
+		private readonly IHubContext<SignalRServer> _hubContext;
 
-        public DetailsModel(IProductService productService)
+		public DetailsModel(IProductService productService, IHubContext<SignalRServer> hubContext)
         {
             _productService = productService;
-        }
+			_hubContext = hubContext;
+		}
         public Product Product { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -30,7 +34,8 @@ namespace PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Pages.Products
             }
 
             var product = await _productService.GetProductById((int) id);
-            if (product == null)
+			await _hubContext.Clients.All.SendAsync("LoadAllItems");
+			if (product == null)
             {
                 return NotFound();
             }

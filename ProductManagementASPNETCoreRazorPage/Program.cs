@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
 using PRN222.lab2.Repositories.Data;
 using PRN222.lab2.Repositories.Entities;
 using PRN222.Lab2.ProductManagementASPNETCoreRazorPage.Helps;
@@ -17,6 +16,7 @@ namespace ProductManagementASPNETCoreRazorPage
 
 			// Add services to the container.
 			builder.Services.AddRazorPages();
+
 
 			builder.Services.AddDbContext<MyStoreDbContext>();
 
@@ -53,7 +53,6 @@ namespace ProductManagementASPNETCoreRazorPage
 				app.UseHsts();
 			}
 
-			app.MapHub<SignalRServer>("/SignalRServer");
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
@@ -63,6 +62,8 @@ namespace ProductManagementASPNETCoreRazorPage
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.MapHub<SignalRServer>("/SignalRServer");
 
 			app.MapRazorPages();
 

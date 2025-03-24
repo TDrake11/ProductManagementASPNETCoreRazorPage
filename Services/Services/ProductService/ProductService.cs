@@ -67,6 +67,12 @@ namespace PRN222.Lab2.Services.Services.ProductService
 				includeProperties: include
 			);
 		}
+		public async Task<int> GetTotalProducts(string? search)
+		{
+			return await _unitOfWork.Repository<Product>().GetCountAsync(
+				filter: p => string.IsNullOrEmpty(search) || p.ProductName.Contains(search)
+			);
+		}
 
 
 		// Helper method to validate include properties format
